@@ -1,10 +1,10 @@
 "use strict"
 
-module.exports = pmc;
+module.exports = pmc_optimized;
 
 //road must be a function of the form road(x,y,z,sx,sy,sz,ex,ey,ez,w,h)
 
-function pmc(x,y,z,lines, road)
+function pmc(x,y,z,lines, road, layers)
 {
 	var approxdist = Infinity
 	
@@ -20,6 +20,32 @@ function pmc(x,y,z,lines, road)
 			var h = 1;		// !!!TODO!!!! need to actually figure these out!!!
 			approxdist = Math.min(approxdist, road(x,y,z,sp[0],sp[1],sp[2],ep[0],ep[1],ep[2],w,h));
 		}
+	}
+	return approxdist;
+}
+
+//loop through layers first and then check roads within the correct layers
+function pmc_optimized(x,y,z,lines, road, layers)
+{
+	var approxdist = Infinity
+	for(var i=0; i<layers.length; i++)
+	{
+		if( z >= layers[i].startheight && z <= layers[i].endheight)
+		{
+			//iterate through lines in this layer
+			for(var j = 0; j<layers[i].lineindicies.length; j++)
+			{
+				var currlineindex = layers[i].lineindicies[j]
+				var currline = lines.lines[currlineindex];
+				var sp = currline[0];
+				var ep = currline[1];
+				
+				var w = 2;		// !!!TODO!!!! need to actually figure these out!!!
+				var h = 1;		// !!!TODO!!!! need to actually figure these out!!!
+				approxdist = Math.min(approxdist, road(x,y,z,sp[0],sp[1],sp[2],ep[0],ep[1],ep[2],w,h));
+			}
+		}
+	
 	}
 	return approxdist;
 }

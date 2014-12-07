@@ -5,7 +5,8 @@ var isosurface = require("isosurface")
 var gc = require('gcode-parser')
 var sl = require("gcode-lines")
 var fs = require("fs")
-var pmc = require("../index.js");
+var pmc = require("../index.js")
+var lines2layers = require("gcode-layers")
 
 //convert gcode to lines
 
@@ -16,23 +17,35 @@ var data = "G90 ; use absolute coordinates\n"+
 "G1 X5 Y0 Z1 E1.5\n"+
 "G1 X5 Y5 Z1 E3\n"+
 "G1 X0 Y5 Z1 E4.5\n"+
-"G1 X0 Y0 Z1 E7";
-
+"G1 X0 Y0 Z1 E7\n"+
+"G1 X0 Y0 Z2 E7\n"+
+"G1 X5 Y0 Z2 E8.5\n"+
+"G1 X5 Y5 Z2 E10\n"+
+"G1 X0 Y5 Z2 E11.5";
 
 var fileContent = data.toString()
 var states = gc(fileContent)
 var lines = sl(states)
+var layers = lines2layers(lines)
+
 
 /*
-var x = 0; var y = 0; var z = 0;
-var approxdist = pmc(x,y,z,lines, imroad);
-console.log(approxdist)
+var x = 0; var y = 0; 
+
+var z = 1.1;
+//for(var z = 0; z<2.2; z=z+0.1)
+//{
+	var approxdist = pmc(x,y,z,lines, imroad, layers);
+	console.log(z+":\t\t\t "+approxdist);
+//}
 */
 
+
+console.log(layers);
 function implicitwrapper(x,y,z)
 {
 	//return x*x+y*y+z*z-50;
-	return pmc(x,y,z,lines, imroad);
+	return Math.min(pmc(x,y,z,lines, imroad, layers), z);
 }
 
 //console.log(implicitwrapper(0,0,0));
@@ -51,3 +64,4 @@ shell.on("viewer-init", function() {
 shell.on("gl-render", function() {
   mesh.draw()
 })
+
