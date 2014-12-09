@@ -40,9 +40,16 @@ function pmc_optimized(x,y,z,lines, road, layers)
 				var sp = currline[0];
 				var ep = currline[1];
 				
-				var w = 2;		// !!!TODO!!!! need to actually figure these out!!!
-				var h = 1;		// !!!TODO!!!! need to actually figure these out!!!
-				approxdist = Math.min(approxdist, road(x,y,z,sp[0],sp[1],sp[2],ep[0],ep[1],ep[2],w,h));
+				
+				
+				//TODO NEED TO SEE IF E IS A ZERO(NON EXTRUSION MOVE!!!! ---v
+				
+				
+				var E = lines.extruded[currlineindex]				//length in mm of material extruded		
+				var Df = 3											//filament diameter
+				var Ve = 3.14159265359/4*Df*Df*E					//volume of extruded material
+				var h = layers[i].endheight-layers[i].startheight;	//layer height
+				approxdist = Math.min(approxdist, road(x,y,z,sp[0],sp[1],sp[2],ep[0],ep[1],ep[2],Ve,h));
 			}
 		}
 	
