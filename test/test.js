@@ -7,21 +7,11 @@ var sl = require("gcode-lines")
 var fs = require("fs")
 var pmc = require("../index.js")
 var lines2layers = require("gcode-layers")
+var path = require("path")
 
 //convert gcode to lines
 
-//var data = fs.readFileSync("test.gcode") ???????? not sure why this isn't working?
-var data = "G90 ; use absolute coordinates\n"+
-"G1 F100\n"+
-"G1 X0 Y0 Z1 E0\n"+
-"G1 X5 Y0 Z1 E1.5\n"+
-"G1 X5 Y5 Z1 E3\n"+
-"G1 X0 Y5 Z1 E4.5\n"+
-"G1 X0 Y0 Z1 E7\n"+
-"G1 X0 Y0 Z2 E7\n"+
-"G1 X5 Y0 Z2 E8.5\n"+
-"G1 X5 Y5 Z2 E10\n"+
-"G1 X0 Y5 Z2 E11.5";
+var data = fs.readFileSync(__dirname + "/test.gcode")
 
 var fileContent = data.toString()
 var states = gc(fileContent)
