@@ -12,7 +12,7 @@ var path = require("path")
 
 //convert gcode to lines
 
-var data = fs.readFileSync(__dirname + "/5mmcubefullsupport2.gcode")
+var data = fs.readFileSync(__dirname + "/5mmpartial.gcode")
 //var data = fs.readFileSync(__dirname + "/test.gcode")
 
 var fileContent = data.toString()
@@ -39,7 +39,7 @@ function implicitwrapper(x,y,z)
 }
 
 //visualize
-var mymesh = isosurface.surfaceNets([64,64,64], implicitwrapper, [[-5,-5,-0.12], [5,5,0.5]])
+var mymesh = isosurface.surfaceNets([64,64,64], implicitwrapper, [[-7,-7,-0.12], [7,7,10]])
 var shell = require("mesh-viewer")()
 var mesh
 
