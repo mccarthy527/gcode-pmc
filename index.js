@@ -6,7 +6,8 @@ module.exports = pmc_optimized;
 
 function pmc(x,y,z,lines, road, layers)
 {
-	var approxdist = Infinity
+	//var approxdist = Infinity
+	var approxdist = 10000;
 	
 	for(var i=0; i<lines.lines.length; i++)
 	{

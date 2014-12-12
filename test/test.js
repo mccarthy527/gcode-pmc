@@ -20,26 +20,48 @@ var states = gc(fileContent)
 var lines = sl(states)
 var layers = lines2layers(lines)
 
-/*
-for(var ze=-0.1; ze<0.6; ze=ze+0.1)
+
+function add(x,y){return [x[0]+y[0],x[1]+y[1],x[2]+y[2]];}
+
+
+
+//visualize
+var bounds = [[-3,-3,-0.1], [3,3,0.61]];
+var center = [100,100,0];
+var resolution = [100,100,100];
+//var resolution = [64,64,64];
+var margin = 0.2;										
+// margin is the amount of empty space around object. 
+//this is done to ensure a watertight model when only part of the shape will be rendered,
+//although it does create rounded edges which is not desireable - probably should look into 
+//a better way of doing this
+//idea: leave them open in the 3d and then do 2d marching squares on all boundary faces.
+bounds = [add(bounds[0],[-margin,-margin,-margin]),add(bounds[1],[margin,margin,margin])];
+
+function implicitwrapper(x,y,z)
 {
-	console.log(ze +":\t" + pmc(0,0,ze,lines, imroad, layers));
+	//return Math.max(x*x+y*y+z*z-50,-2-z, z-4);
+	//return Math.min(pmc(x,y,z,lines, imroad, layers), z);
+	
+	var model = pmc(x+center[0],y+center[1],z+center[2],lines, imroad, layers);
+	//var model = x*x+y*y+z*z-50
+	var xmin = bounds[0][0]-x+margin;
+	var xmax = x-bounds[1][0]+margin;
+	var ymin = bounds[0][1]-y+margin;
+	var ymax = y-bounds[1][1]+margin;
+	var zmin = bounds[0][2]-z+margin;
+	var zmax = z-bounds[1][2]+margin;
+	return Math.max(model,xmin,xmax,ymin,ymax,zmin,zmax);
+}
+
+/*
+for(var ze=-4; ze<6; ze=ze+0.2)
+{
+	console.log(ze +":\t" + improvedwrapper(0,0,ze));
 }
 */
 
-
-
-//console.log(layers);
-//console.log(lines);
-function implicitwrapper(x,y,z)
-{
-	//return x*x+y*y+z*z-50;
-	//return Math.min(pmc(x,y,z,lines, imroad, layers), z);
-	return pmc(x+100,y+100,z,lines, imroad, layers);
-}
-
-//visualize
-var mymesh = isosurface.surfaceNets([64,64,64], implicitwrapper, [[-7,-7,-0.12], [7,7,10]])
+var mymesh = isosurface.surfaceNets(resolution, implicitwrapper, bounds )
 var shell = require("mesh-viewer")()
 var mesh
 
@@ -50,4 +72,3 @@ shell.on("viewer-init", function() {
 shell.on("gl-render", function() {
   mesh.draw()
 })
-
