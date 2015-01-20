@@ -26,9 +26,9 @@ function add(x,y){return [x[0]+y[0],x[1]+y[1],x[2]+y[2]];}
 
 
 //visualize
-var bounds = [[-3,-3,-0.1], [3,3,0.61]];
+var bounds = [[-11,-11,0.2], [11,11,11]];				//NEED TO FIX BUG WHERE IF BOUND STARTS AT 0, bottom face is missing!
 var center = [100,100,0];
-var resolution = [100,100,100];
+var resolution = [100,100,256];
 //var resolution = [64,64,64];
 var margin = 0.2;										
 // margin is the amount of empty space around object. 
